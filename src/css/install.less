@@ -1,0 +1,119 @@
+.instalacion {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	width: 100vw;
+	height: 100vh;
+	.steps {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 300px;
+		a {
+			text-decoration: none;
+			color: @p;
+			display: block;
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			background-color: @f;
+			text-align: center;
+			line-height: 45px;
+			font-size: 1.5rem;
+			.sombra;
+			position: relative;
+			transition: all 0.2s;
+			&:hover, &.active {
+				background-color: @p;
+				color: @f;
+			}
+			&.ok {
+				outline: 2px solid @g;
+				&::after {
+					content: '✓';
+					display: block;
+					width: 20px;
+					height: 20px;
+					background-color: @g;
+					border-radius: 50%;
+					color: @f;
+					position: absolute;
+					bottom: 0;
+					right: -5px;
+					font-size: 0.7rem;
+					text-align: center;
+					line-height: 20px;
+				}
+			}
+		}
+	}
+	.card {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: flex-start;
+		background-color: @f;
+		padding: 40px;
+		border-radius: 15px;
+		margin: 15px auto;
+		.sombra;
+		h2 {
+			display: block;
+			text-align: center;
+			margin-bottom: 5px;
+		}
+		.select-logo {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin: 10px auto;
+			div {
+				border: 1px solid darken(@t, 10);
+				background-color: @t;
+				overflow: hidden;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 250px;
+				height: 90px;
+				position: relative;
+				input {
+					width: 100%;
+					height: 100%;
+					position: absolute;
+					opacity: 0;
+				}
+				label {
+					font-size: 0.9rem;
+					color: darken(@t, 40);
+				}
+				&:last-child {
+					margin-left: 15px;
+					width: 50px;
+					height: 50px;
+				}	
+			}
+		}
+	}
+	.btns {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+		text-align: right;
+		margin-top: 10px;
+		padding-top: 10px;
+		border-top: 1px solid @t;
+	}
+	span.copy {
+		position: absolute;
+		bottom: 10px;
+		color: darken(@t, 40);
+		font-size: 0.7rem;
+		a {
+			color: darken(@t, 40);
+			text-decoration: none;
+		}
+	}
+}

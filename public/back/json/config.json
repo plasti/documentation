@@ -1,0 +1,21 @@
+{
+	"config": {
+		"title": "",
+	    "description": "",
+	    "logo": "",
+	    "favicon": "",
+	    "primario": "",
+	    "secundario": "",
+	    "terciario": "",
+	    "foro": false,
+	    "login": false,
+	    "multi_lang": false,
+	    "facebook": "",
+	    "linkedind": "",
+	    "whatsapp": "",
+	    "instagram": "",
+	    "youtube": "",
+	    "email": "",
+	    "phone": ""
+	}
+}

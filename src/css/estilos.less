@@ -1,0 +1,65 @@
+@p: #212738;
+@s: #F97068;
+@t: #EDF2EF;
+@c: #57C4E5;
+@f: #fff;
+@g: #00cf00;
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+body {
+	min-height: 100vh;
+	background-color: @t;
+}
+.sombra {box-shadow: 0px 2px 5px 0px fade(@p, 40);}
+.form-group {
+	display: block;
+	width: 100%;
+	text-align: left;
+	margin: 5px auto;
+	label {
+		display: block;
+		margin-top: 5px;
+	}
+	input {
+		width: 100%;
+		display: block;
+		text-align: left;
+		background-color: @t;
+		border: none;
+		padding: 10px 14px;
+	}
+	input[type="checkbox"], input[type="color"] {
+		display: inline-block;
+		width: 20px;
+		height: 22px;
+		vertical-align: middle;
+		margin-right: 7px;
+		padding: 0;
+	}
+}
+.btn {
+	display: inline-block;
+	background-color: @p;
+	color: @f;
+	text-decoration: none;
+	outline: none;
+	border: none;
+	padding: 7px 15px;
+	border-radius: 5px;
+}
+.columns {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	&>div {
+		flex: 1;
+		&:first-child {
+			margin-right: 10px;
+		}
+	} 
+}
+
+@import 'install.less';
