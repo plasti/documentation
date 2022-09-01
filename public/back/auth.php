@@ -1,11 +1,10 @@
 <?php 
 	header("Access-Control-Allow-Origin: *");
-	header('Content-Type: application/json');
-	extract(json_decode(file_get_contents('php://input'),true));
-	if(isset($token)) {
-		if($token != 'ZXN0ZSBlcyBlbCB0b2tlbiBkZSBhY2Nlc28uLi4=') {
-			die("Acceso denegado.");
-		}
+	header("Access-Control-Allow-Methods: GET, POST, PUT");
+	header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Token");
+	$auth = $_SERVER['HTTP_TOKEN'];
+	if($auth == 'ZXN0ZSBlcyBlbCB0b2tlbiBkZSBhY2Nlc28uLi4=') {
+		extract(json_decode(file_get_contents('php://input'),true));
 	}else {
 		die("Acceso denegado.");
 	}

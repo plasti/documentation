@@ -1,0 +1,43 @@
+// CONFIG
+{
+	"config":{
+		"title":"",
+		"description":"",
+		"logo":"",
+		"favicon":"",
+		"primario":"",
+		"secundario":"",
+		"terciario":"",
+		"foro":false,
+		"login":false,
+		"facebook":"",
+		"instagram":"",
+		"linkedin":"",
+		"whatsapp":"",
+		"youtube":"",
+		"email":"",
+		"phone":"",
+		"user":"",
+		"password":""
+	}
+}
+// MENU
+{
+	"menu": [
+		{
+			"title": "String",
+			"type": "simple || details",
+			"content": "name file to getter",
+			"items": [
+				{
+					"title": "string",
+					"content": "name file to getter",
+				},
+				{
+					"title": "string",
+					"content": "name file to getter",
+				},
+			]
+		}
+	]
+}
