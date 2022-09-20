@@ -19,5 +19,10 @@ const post = (data) => {
 	})
 }
 
+const id = () => {
+	return ((new Date().getTime() - 1300000000000) * 64) * 512 + Math.floor(Math.random() * 512)
+}
+
 exports.post = post;
 exports.url = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? 'http://localhost/documentation/public/back/files' : (window.location.protocol+'//'+window.location.hostname+'/back/files');
+exports.id = id;

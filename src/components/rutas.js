@@ -2,27 +2,51 @@ import React, { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useNavigate, Route, Routes, useLocation} from "react-router-dom";
 
-// instalacion
-import Install from '../install/install';
-import Login from '../install/login';
-
 // navegacion
-import Home from '../home';
+import Home from '../Home';
+
+//documentacion
+import Documentacion from '../docs/documentacion';
+
+
+// foro
+import Foro from '../foro/foro';  
+
+// contacto
+import Contacto from '../contacto/contacto';
+
+// instalacion
+import Config from '../admin/config';
+import Login from '../admin/login';
+
 
 // screens
 // login
-function AnimatedRoutes() {
-	const location = useLocation();
+function AnimatedRoutes(props) {
+	const location = useLocation()
   const navigate = useNavigate()
+  let config = props.config
+  let admin = props.admin
+  let setLogin = props.setLogin
 	return (
 		<AnimatePresence>
       <Routes location={location} key={location.pathname}>
         
-        <Route path="/" element={<Home navigate={navigate}/>}/>
+        {/*home*/}
+        <Route path="/" element={<Home config={config} navigate={navigate}/>}/>
         
+        {/*documentacion*/}
+        <Route path="documentacion/:item" element={<Documentacion navigate={navigate} config={config} admin={admin}/>}/>
+
+        {/*foto*/}
+        <Route path="foro" element={<Foro navigate={navigate}/>}/>
+
+      {/*contacto*/}
+        <Route path="contacto" element={<Contacto navigate={navigate}/>}/>
+
         {/*Instalacion*/}
-        <Route path="/install" element={<Install navigate={navigate}/>}/>
-        <Route path="/login" element={<Login navigate={navigate}/>}/>
+        <Route path="/settings" element={<Config navigate={navigate} admin={admin}/>}/>
+        <Route path="/login" element={<Login navigate={navigate} setLogin={setLogin}/>}/>
       </Routes>
     </AnimatePresence>
 	)

@@ -22,7 +22,6 @@ export default class Install extends React.Component {
       secundario: "",
       terciario: "",
       foro: false,
-      login: false,
 
       // 3
       facebook: "",
@@ -31,7 +30,7 @@ export default class Install extends React.Component {
       whatsapp: "",
       youtube: "",
       email: "",
-      phone: "",
+      web: "",
 
       // 4
       user: '',
@@ -39,30 +38,35 @@ export default class Install extends React.Component {
     }
   }
   componentDidMount() {
-    post({action: 'get_config'}).then(data =>  {
-      data = data.config;
-      this.setState({
-        title: data.title,
-        description: data.description,
-        logo_show: (data.logo != '') ? (url+'/'+data.logo) : '',
-        favicon_show: (data.favicon != '') ? (url+'/'+data.favicon) : '',
-        primario: data.primario,
-        secundario: data.secundario,
-        terciario: data.terciario,
-        foro: data.foro,
-        login: data.login,
-        facebook: data.facebook,
-        instagram: data.instagram,
-        linkedin: data.linkedin,
-        whatsapp: data.whatsapp,
-        youtube: data.youtube,
-        email: data.email,
-        phone: data.phone,
-        user: btoa(data.user),
-        password: btoa(data.password),
-        loading: false,
-      });
-    })
+    console.log(this.props)
+    if(this.props.admin == false) {
+      window.location.href = '/'
+    }else {
+      post({action: 'get_config'}).then(data =>  {
+        data = data.config;
+        this.setState({
+          title: data.title,
+          description: data.description,
+          logo_show: (data.logo != '') ? (url+'/'+data.logo) : '',
+          favicon_show: (data.favicon != '') ? (url+'/'+data.favicon) : '',
+          primario: data.primario,
+          secundario: data.secundario,
+          terciario: data.terciario,
+          foro: data.foro,
+          login: data.login,
+          facebook: data.facebook,
+          instagram: data.instagram,
+          linkedin: data.linkedin,
+          whatsapp: data.whatsapp,
+          youtube: data.youtube,
+          email: data.email,
+          web: data.web,
+          user: (data.user != '' && data.user != null) ? atob(data.user) : '',
+          password: (data.password != '' && data.password != null) ? atob(data.password) : '',
+          loading: false,
+        });
+      })
+    }
   }
   handleInput (e) {
     const name = e.target.name;
@@ -110,7 +114,7 @@ export default class Install extends React.Component {
           whatsapp: this.state.whatsapp,
           youtube: this.state.youtube,
           email: this.state.email,
-          phone: this.state.phone,
+          web: this.state.web,
           // 4
           user: this.state.user,
           password: this.state.password,
@@ -140,7 +144,7 @@ export default class Install extends React.Component {
             exit={{x: window.innerWidth}}
           >
             <h2>¡Bienvenido!</h2>
-            <p>Vamos a proceder con la instalación de la aplicación.</p>
+            <p>Vamos a configurar tu aplicación de documentación.</p>
             <div className="form-group">
               <label>Titulo del sitio</label>
               <input type="text" placeholder="..." value={this.state.title} name="title" onChange={(e) => this.handleInput(e)} />
@@ -184,19 +188,19 @@ export default class Install extends React.Component {
             <div className="form-group">
               <label>
                 <input type="color" value={this.state.primario} name="primario" onChange={(e) => this.handleInput(e)} />
-                Color primario
+                Color del menu - footer
               </label>
             </div>
             <div className="form-group">
               <label>
                 <input type="color" value={this.state.secundario} name="secundario" onChange={(e) => this.handleInput(e)} />
-                Color secundario
+                Color de los textos menu - footer
               </label>
             </div>
             <div className="form-group">
               <label>
                 <input type="color" value={this.state.terciario} name="terciario" onChange={(e) => this.handleInput(e)} />
-                Color terciario
+                Color para detalles
               </label>
             </div>
 
@@ -204,12 +208,6 @@ export default class Install extends React.Component {
               <label>
                 <input type="checkbox" defaultChecked={this.state.foro} name="foro" onChange={() => this.setState({foro: !this.state.foro})} />
                 Habilitar foro
-              </label>
-            </div>
-            <div className="form-group">
-              <label>
-                <input type="checkbox" defaultChecked={this.state.login} name="login" onChange={() => this.setState({login: !this.state.login})} />
-                Requiere autenticación
               </label>
             </div>
             <div className="btns">
@@ -238,22 +236,22 @@ export default class Install extends React.Component {
                   <input type="text" placeholder="..." value={this.state.instagram} name="instagram" onChange={(e) => this.handleInput(e)} />
                 </div>
                 <div className="form-group">
-                  <label>Linkedin</label>
-                  <input type="text" placeholder="..." value={this.state.linkedin} name="linkedin" onChange={(e) => this.handleInput(e)} />
+                  <label>Whatsapp</label>
+                  <input type="text" placeholder="..." value={this.state.whatsapp} name="whatsapp" onChange={(e) => this.handleInput(e)} />
                 </div>
               </div>
               <div>
+                <div className="form-group">
+                  <label>Linkedin</label>
+                  <input type="text" placeholder="..." value={this.state.linkedin} name="linkedin" onChange={(e) => this.handleInput(e)} />
+                </div>
                 <div className="form-group">
                   <label>Youtube</label>
                   <input type="text" placeholder="..." value={this.state.youtube} name="youtube" onChange={(e) => this.handleInput(e)} />
                 </div>
                 <div className="form-group">
-                  <label>Whatsapp</label>
-                  <input type="text" placeholder="..." value={this.state.whatsapp} name="whatsapp" onChange={(e) => this.handleInput(e)} />
-                </div>
-                <div className="form-group">
-                  <label>Email</label>
-                  <input type="text" placeholder="..." value={this.state.email} name="email" onChange={(e) => this.handleInput(e)} />
+                  <label>Pagina web</label>
+                  <input type="text" placeholder="..." value={this.state.web} name="web" onChange={(e) => this.handleInput(e)} />
                 </div>
               </div>
             </div>
@@ -273,6 +271,10 @@ export default class Install extends React.Component {
           >
             <h2>Ya casi, falta un solo paso</h2>
             <p>Necesitamos un usuario administrador.</p>
+            <div className="form-group">
+              <label>Email</label>
+              <input type="text" placeholder="..." value={this.state.email} name="email" onChange={(e) => this.handleInput(e)} />
+            </div>
             <div className="form-group">
               <label>Usuario</label>
               <input type="text" placeholder="..." value={this.state.user} name="user" onChange={(e) => this.handleInput(e)} />

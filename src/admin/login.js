@@ -12,6 +12,12 @@ export default class Login extends React.Component {
     }
   }
 
+  componentDidMount() {
+    if (localStorage.getItem('@login_documentation') == 'ZXN0YSBhdXRlbnRpY2Fkbw==') {
+      window.location.href = '/'
+    }
+  }
+
   handleInput (e) {
     const name = e.target.name;
     const value = e.target.value;
@@ -27,6 +33,7 @@ export default class Login extends React.Component {
       }).then(data => {
         if(data.status) {
           localStorage.setItem('@login_documentation', 'ZXN0YSBhdXRlbnRpY2Fkbw==');
+          this.props.setLogin(true)
           this.props.navigate('/', {replace: true});
         }else {
           alert(data.data);
@@ -47,18 +54,20 @@ export default class Login extends React.Component {
           animate={{x: 0}}
           exit={{x: window.innerWidth}}
         >
-          <h2>Inicio de sesión</h2>
-          <div className="form-group">
-            <label>Usuario</label>
-            <input type="text" placeholder="..." value={this.state.user} name="user" onChange={(e) => this.handleInput(e)} />
-          </div>
-          <div className="form-group">
-            <label>Contraseña</label>
-            <input type="password" placeholder="..." value={this.state.password} name="password" onChange={(e) => this.handleInput(e)} />
-          </div>
-          <div className="btns">
-            <a href="#" className="btn" onClick={() => this.login()}>Ingresar</a>
-          </div>
+          <form onSubmit={(e) => {e.preventDefault(); this.login()}}>
+            <h2>Inicio de sesión</h2>
+            <div className="form-group">
+              <label>Usuario</label>
+              <input type="text" placeholder="..." value={this.state.user} name="user" onChange={(e) => this.handleInput(e)} />
+            </div>
+            <div className="form-group">
+              <label>Contraseña</label>
+              <input type="password" placeholder="..." value={this.state.password} name="password" onChange={(e) => this.handleInput(e)} />
+            </div>
+            <div className="btns">
+              <button href="#" className="btn" onClick={() => this.login()}>Ingresar</button>
+            </div>
+          </form>
         </motion.div>
         <span className="copy"><a href="#">Hexa Software</a> - Apps</span>
       </div>

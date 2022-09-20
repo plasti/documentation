@@ -30,6 +30,12 @@ export default class EditorComponent extends React.Component {
     return false;
   }
 
+  insert() {
+    let html = stateToHTML(this.state.editorState.getCurrentContent());
+    this.props.onInsert(html)
+    this.onChange(EditorState.createEmpty(decorator))
+  }
+
   _mapKeyToEditorCommand(e) {
     if (e.keyCode === 9 /* TAB */) {
       const newEditorState = RichUtils.onTab(e, this.state.editorState,4);
@@ -39,9 +45,7 @@ export default class EditorComponent extends React.Component {
       return;
     }
     if(e.code == 'Enter' && e.ctrlKey) {
-      let html = stateToHTML(this.state.editorState.getCurrentContent());
-      this.props.onInsert(html)
-      this.onChange(EditorState.createEmpty(decorator))
+      this.insert()
       return;
     }
     return getDefaultKeyBinding(e);
@@ -188,7 +192,10 @@ export default class EditorComponent extends React.Component {
             spellCheck={true}
           />
         </div>
-        <span className="msg-editor">Para insertar texto presiona CTRL + Enter</span>
+        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+          <span className="msg-editor">Para insertar texto presiona CTRL + Enter</span>
+          <a className="btn-inser" href="#" onClick={() => this.insert()}>Insertar</a>
+        </div>
       </div>
     );
   }
