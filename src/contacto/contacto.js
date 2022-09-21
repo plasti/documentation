@@ -1,5 +1,8 @@
-export default function Contacto(props) {
+import React from 'react';
+import Contacto from '../components/contacto';
+
+export default function ContactoScreen(props) {
 	return (
-		<p>Esta es la pagina de contacto</p>
+		<Contacto config={props.config}/>
 	)
 }

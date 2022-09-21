@@ -1,6 +1,6 @@
 import React from 'react';
 import {post, url} from '../utiles';
-import {Editor, EditorState, RichUtils, getDefaultKeyBinding, CompositeDecorator} from 'draft-js';
+import {Editor, EditorState, RichUtils, getDefaultKeyBinding, CompositeDecorator, convertFromHTML, ContentState} from 'draft-js';
 import {stateToHTML} from 'draft-js-export-html';
 import 'draft-js/dist/Draft.css';
 
@@ -20,6 +20,18 @@ export default class EditorComponent extends React.Component {
     this.toggleBlockType = this._toggleBlockType.bind(this);
     this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
   }
+
+  componentDidMount() {
+    if(this.props.content != null) {
+      const blocksFromHTML = convertFromHTML(atob(this.props.content));
+      const state = ContentState.createFromBlockArray(
+        blocksFromHTML.contentBlocks,
+        blocksFromHTML.entityMap,
+      );
+      this.setState({editorState: EditorState.createWithContent(state)});
+    }
+  }
+
 
   _handleKeyCommand(command, editorState) {
     const newState = RichUtils.handleKeyCommand(editorState, command);

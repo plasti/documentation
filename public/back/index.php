@@ -16,7 +16,7 @@ if($action == 'set_config') {
 	$config->primario = $primario;
 	$config->secundario = $secundario;
 	$config->terciario = $terciario;
-	$config->foro = $foro;
+	$config->code_login = base64_encode($code_login);
 	$config->facebook = $facebook;
 	$config->instagram = $instagram;
 	$config->linkedin = $linkedin;
@@ -200,5 +200,63 @@ if($action == 'set_keywords') {
 	fclose($f);
 	echo json_encode(['status' => true, 'data' => 'Ok']);
 }
+if($action == 'send_mail') {
 
+	$json = file_get_contents('json/config.json');
+	$json = json_decode($json);
+	$config = $json->config;
+
+	// Armar correo
+    // ------------
+    $html = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
+		$html .= '<html xmlns="http://www.w3.org/1999/xhtml">';
+		$html .= '<head>';
+			$html .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
+			$html .= '<title>'.$config->title.' - Nuevo contacto</title>';
+			$html .= '<meta name="viewport" content="width=device-width, initial-scale=1.0"/>';
+		$html .= '</head>';
+		$html .= '<body style="margin: 0;padding: 35px 0; background: #eaeaea;">';
+		$html .= '<table align="center" border="0"  cellpadding="0" cellspacing="0" width="450" style="border: 1px solid #eaeaea;">';
+			$html .= '<tr>';
+				$html .= '<td align="center" bgcolor="#fff" style="padding: 50px 0; background-image: url(http://'.$_SERVER['HTTP_HOST'].'/files/'.$config->logo.'); background-size: 30%; background-position: center; background-repeat: no-repeat; position: relative;border-top-left-radius: 40px;border-top-right-radius: 40px;">';
+				$html .= '</td>';
+			$html .= '</tr>';
+			$html .= '<tr>';
+				$html .= '<td bgcolor="#fff" style="padding: 15px 30px;">		';
+					$html .= '<table border="0" cellpadding="0" cellspacing="0" width="100%">';
+						$html .= '<tr>';
+							$html .= '<td style="color: #a3a3a3; font-family: Arial, sans-serif; font-size: 24px; padding: 15px 0; text-align: center;">';
+							  	$html .= '<b>'.$subject.'</b>';
+							$html .= '</td>';
+						$html .= '</tr>';
+						$html .= '<tr>';
+							$html .= '<td style="padding: 20px 0 20px 0; color: #a3a3a3; font-family: Arial, sans-serif; font-size: 15px;text-align: center;">';
+								$html .= '<b>Nombre: '.$name.'</b><br/>';
+								$html .= '<b>Teléfono: '.$phone.'</b><br/>';
+								$html .= '<b>Mensaje: '.$message.'</b><br/>';
+							$html .= '</td>';
+						$html .= '</tr>';
+					 $html .= '</table>';
+				$html .= '</td>';
+			$html .= '</tr>';
+			$html .= '<tr>';
+				$html .= '<td bgcolor="#fff" style="padding: 30px 30px 30px 30px;border-bottom-left-radius: 30px;border-bottom-right-radius: 30px;">';
+					$html .= '<table border="0" cellpadding="0" cellspacing="0" width="100%">';
+						$html .= '<tr>';
+							$html .= '<td width="75%" style="color: #a3a3a3; font-family: Arial, sans-serif; font-size: 14px;">';
+							 $html .= '&copy; <a style="color: #a3a3a3" href="http://'.$_SERVER['HTTP_HOST'].'">'.$config->title.'</a>, '.date_format(date_create(), 'Y').'<br/>';
+							$html .= 'Por favor no responder ni reenviar, este es un mensaje generado automaticamente.';
+							$html .= '</td>';
+							$html .= '<td align="right">';
+							 $html .= '</td>';
+						$html .= '</tr>';
+					$html .= '</table>';
+				$html .= '</td>';
+			$html .= '</tr>';
+		$html .= '</table> ';
+		$html .= '</body>';
+	$html .= '</html>';
+	mail($config->email, $config->title.' - Nuevo contacto', $html);
+	echo json_encode(['status' => true]);
+}
 ?>

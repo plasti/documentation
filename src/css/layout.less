@@ -120,6 +120,23 @@ html {
 			.btn {
 				font-size: 1.5rem;
 				margin-right: 20px;
+				&.loader {
+					font-size: 0 !important;
+					width: 100px;
+					&::before {
+						content: '';
+						display: block;
+						width: 15px;
+						height: 15px;
+						border-radius: 50%;
+						border-top: 2px solid;
+						border-left: 2px solid;
+						border-right: 2px solid;
+						border-bottom: 2px solid transparent;
+						margin: 5px auto;
+						animation: loader 0.4s linear infinite;
+					}
+				}
 			}
 			form {
 				display: block;
@@ -816,4 +833,26 @@ html {
 }
 .w-tc-editor code[class*='language-'] .token.boolean, .w-tc-editor pre[class*='language-'] .token.boolean, .w-tc-editor code[class*='language-'] .token.constant, .w-tc-editor pre[class*='language-'] .token.constant, .w-tc-editor code[class*='language-'] .token.deleted, .w-tc-editor pre[class*='language-'] .token.deleted, .w-tc-editor code[class*='language-'] .token.number, .w-tc-editor pre[class*='language-'] .token.number, .w-tc-editor code[class*='language-'] .token.symbol, .w-tc-editor pre[class*='language-'] .token.symbol {
 	color: #ff8383 !important;
+}
+.require-code {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 60vh;
+	flex-direction: column;
+	font-size: 1.5rem;
+	label {
+		display: block;
+		margin-bottom: 10px;
+	}
+	input {
+		font-size: 1.5rem;
+		display: inline-block;
+		padding: 10px 15px;
+		border-radius: 7px;
+		text-align: center;
+		background-color: #eaeaea;
+		border: 2px solid;
+		outline: none;
+	}
 }

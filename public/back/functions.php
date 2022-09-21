@@ -19,6 +19,14 @@ function createFileContent($name) {
 }
 
 function deleteFileContent($name) {
+    $json = file_get_contents('json/content/'.$name);
+    $json = json_decode($json);
+    $content = $json->content;
+    foreach($content as $con) {
+        if($con->type == 'imagen') {
+            deleteFile($con->file);
+        }
+    }
     unlink(__DIR__."/json/content/".$name);
 }
 

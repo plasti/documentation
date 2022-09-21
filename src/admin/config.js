@@ -21,7 +21,8 @@ export default class Install extends React.Component {
       primario: "",
       secundario: "",
       terciario: "",
-      foro: false,
+      code_login: "",
+
 
       // 3
       facebook: "",
@@ -52,8 +53,7 @@ export default class Install extends React.Component {
           primario: data.primario,
           secundario: data.secundario,
           terciario: data.terciario,
-          foro: data.foro,
-          login: data.login,
+          code_login: (data.code_login != '' && data.code_login != null) ? atob(data.code_login) : '',
           facebook: data.facebook,
           instagram: data.instagram,
           linkedin: data.linkedin,
@@ -105,8 +105,7 @@ export default class Install extends React.Component {
           primario: this.state.primario,
           secundario: this.state.secundario,
           terciario: this.state.terciario,
-          foro: this.state.foro,
-          login: this.state.login,
+          code_login: this.state.code_login,
           // 3
           facebook: this.state.facebook,
           instagram: this.state.instagram,
@@ -203,12 +202,9 @@ export default class Install extends React.Component {
                 Color para detalles
               </label>
             </div>
-
             <div className="form-group">
-              <label>
-                <input type="checkbox" defaultChecked={this.state.foro} name="foro" onChange={() => this.setState({foro: !this.state.foro})} />
-                Habilitar foro
-              </label>
+              <label>Código para ingresar a la documentación</label>
+              <input type="text" placeholder="..." value={this.state.code_login} name="code_login" onChange={(e) => this.handleInput(e)} />
             </div>
             <div className="btns">
               <a href="#" className="btn" onClick={() => this.setState({active: 1})}>❮ Anterior</a>

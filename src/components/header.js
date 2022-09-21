@@ -77,8 +77,9 @@ export default class Header extends React.Component {
           {this.state.history.length > 0 && (
             <div className="history">
               <span>Historial</span>
-              {this.state.history.map(h => (
+              {this.state.history.map((h, i) => (
                 <NavLink 
+                  key={i}
                   to={h.link} 
                   onClick={() => this.setState({modal_search: false, keywords: null, menuShow: []})} 
                   style={{borderColor: this.props.terciario}}

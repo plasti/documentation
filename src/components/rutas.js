@@ -42,7 +42,7 @@ function AnimatedRoutes(props) {
         <Route path="foro" element={<Foro navigate={navigate}/>}/>
 
       {/*contacto*/}
-        <Route path="contacto" element={<Contacto navigate={navigate}/>}/>
+        <Route path="contacto" element={<Contacto config={config} navigate={navigate}/>}/>
 
         {/*Instalacion*/}
         <Route path="/settings" element={<Config navigate={navigate} admin={admin}/>}/>

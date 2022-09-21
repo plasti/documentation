@@ -65,6 +65,36 @@ export default class Aside extends React.Component {
             this.props.set404(true)
           }
         }
+      }else {
+        let item = menu[0]
+        if (item != undefined) {
+          if(item.type == 'simple') {
+            this.props.onSelect({
+              file: item.id+'_'+item.content+'.json',
+              title: item.title,
+              subtitle: null,
+              keywords: item.keywords,
+              type: 'item', 
+              id: item.id,
+              id_subitem: null
+            })
+          }else {
+            if('items' in item) {
+              let subitem = item.items[0]
+              if(subitem != undefined) {
+                this.props.onSelect({
+                  file: subitem.id+'_'+subitem.content+'.json',
+                  title: item.title,
+                  subtitle: subitem.title,
+                  keywords: subitem.keywords,
+                  type: 'subitem', 
+                  id: item.id,
+                  id_subitem: subitem.id
+                })
+              }
+            }
+          }
+        }
       }
       this.setState({menu: menu, loading: false})
     })

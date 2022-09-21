@@ -10,6 +10,10 @@ import Modal from '../components/modal';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import withParams from '../utiles/withparams';
 
+Array.prototype.move = function (from, to) {
+  this.splice(to, 0, this.splice(from, 1)[0]);
+};
+
 class Documentacion extends React.Component {
   
   constructor(props) {
@@ -28,8 +32,40 @@ class Documentacion extends React.Component {
       id_subitem: null,
       modal_keywords: false,
       page404: false, 
+      can_view: false,
+      code_login: false,
+      code: '',
+      // -------
+      id_editing: null,
+      content_editing: null, 
     }
   }
+  componentDidMount() {
+    if(this.props.config.code_login != '' && this.props.config.code_login != null) {
+      let code = localStorage.getItem('@xcoxde_xloxgin')
+      if(atob(code) == atob(this.props.config.code_login)) {
+        this.setState({can_view: true, code_login: false})
+      }else {
+        this.setState({can_view: false, code_login: true})
+      }
+    }else {
+      this.setState({can_view: true, code_login: false})
+    }
+  }
+
+  setCode(code) {
+    if(code == atob(this.props.config.code_login)) {
+      localStorage.setItem('@xcoxde_xloxgin', btoa(code))
+      this.setState({
+        can_view: true,
+        code_login: false,
+        code: ''
+      })
+    }else {
+      this.setState({code: code})
+    }
+  }
+
 
   saveKeywords() {
     post({
@@ -44,7 +80,6 @@ class Documentacion extends React.Component {
       }
     })
   }
-
   getContent(datos) {
     post({action: 'get_content', file: datos.file}).then(data => {
       if("content" in data) {
@@ -82,18 +117,33 @@ class Documentacion extends React.Component {
       let content = this.state.content
       content.push({
         id: id(),
-        index: null,
         type: data.type,
         content: btoa(data.html),
         file: data.file,
         lang: data.lang,
         tag_lang: data.tag_lang
       })
-      this.setState({content})
+      this.setState({content: content})
     }else {
       alert('Selecciona una pagina')
     }
   }
+  update(data) {
+    let content = this.state.content
+    let index = content.findIndex(i => i.id == this.state.id_editing)
+    content[index].content = btoa(data.html)
+    if("file" in data) {
+      content[index].file = data.file
+    }
+    if("lang" in data) {
+      content[index].lang = data.lang
+    }
+    if("tag_lang" in data) {
+      content[index].tag_lang = data.tag_lang
+    }
+    this.setState({content: content, id_editing: null, new_block: null, content_editing: null})
+  }
+
   remove(id, file = null) {
     let content = this.state.content
     content = content.filter(c => c.id != id);
@@ -104,6 +154,27 @@ class Documentacion extends React.Component {
     }
     this.setState({content})
   }
+  moveUp(id) {
+    let content = this.state.content
+    let index = content.findIndex(i => i.id == id)
+    if(index == 0) {
+      alert('No se puede mover más arriba', 'info')
+    }else {
+      content.move(index, index - 1)
+      this.setState({content: content})
+    }
+  }
+  moveDown(id) {
+    let content = this.state.content
+    let index = content.findIndex(i => i.id == id)
+    if(index == content.length - 1) {
+      alert('No se puede mover más abajo', 'info')
+    }else {
+      content.move(index, index + 1)
+      this.setState({content: content})
+    }
+  }
+
   render() {
     return (
       <div className="contiainer-content">
@@ -134,44 +205,90 @@ class Documentacion extends React.Component {
         </Modal>
 
         {/*Contenido*/}
-        <section className="content">   
-          <div className="migas">
-            <div>
-              <span>Documentación</span>
-              {this.state.title != null && (<span> ❯ {this.state.title}</span>)}
-              {this.state.subtitle != null && (<span> ❯ {this.state.subtitle}</span>)}
-            </div>
-            {this.props.admin && (
+        {this.state.can_view && (
+          <section className="content">   
+            <div className="migas">
               <div>
-                {this.state.title != null && (<a href="#" className="keywords" onClick={(e) => {
-                  e.preventDefault();
-                  this.setState({modal_keywords: true})
-                }}>Palabras clave para este contenido</a>)}
+                <span>Documentación</span>
+                {this.state.title != null && (<span> ❯ {this.state.title}</span>)}
+                {this.state.subtitle != null && (<span> ❯ {this.state.subtitle}</span>)}
               </div>
-            )}
-          </div>
+              {this.props.admin && (
+                <div>
+                  {this.state.title != null && (<a href="#" className="keywords" onClick={(e) => {
+                    e.preventDefault();
+                    this.setState({modal_keywords: true})
+                  }}>Palabras clave para este contenido</a>)}
+                </div>
+              )}
+            </div>
 
-          {this.state.page404 ? (
-            <>
-              <span className="nothing" style={{fontSize: '10rem', display: 'block', textAlign: 'center'}}>404.</span>
-              <span className="nothing" style={{display: 'block', textAlign: 'center'}}>No se encontró contenido.</span>
-            </>
-          ): (
-            <>
-              {this.state.content.length == 0 && (
-                <span className="nothing">Sin contenido.</span>
-              )} 
-              {this.state.content.map(item => {
-                if(this.props.admin) {
-                    return (
-                      <div className="block-edit" key={item.id}>
-                        <div className="access-btn">
-                          <a href="#" className="icon-up"></a>
-                          <a href="#" className="icon-down"></a>
-                          <a href="#" className="icon-edit"></a>
-                          <a href="#" className="icon-trash" onClick={() => this.remove(item.id, item.file)}></a>
+            {this.state.page404 ? (
+              <>
+                <span className="nothing" style={{fontSize: '10rem', display: 'block', textAlign: 'center'}}>404.</span>
+                <span className="nothing" style={{display: 'block', textAlign: 'center'}}>No se encontró contenido.</span>
+              </>
+            ): (
+              <>
+                {this.state.content.length == 0 && (
+                  <span className="nothing">Sin contenido.</span>
+                )} 
+                {this.state.content.map(item => {
+                  if(this.props.admin) {
+                      return (
+                        <div className="block-edit" key={item.id}>
+                          <div className="access-btn">
+                            <a href="#" className="icon-up" onClick={(e) => {
+                              e.preventDefault()
+                              console.log('up')
+                              this.moveUp(item.id)
+                            }}></a>
+                            <a href="#" className="icon-down" onClick={(e) => {
+                              e.preventDefault()
+                              this.moveDown(item.id)
+                            }}></a>
+                            <a href="#" className="icon-edit" onClick={(e) => {
+                              e.preventDefault()
+                              this.setState({
+                                id_editing: item.id,
+                                content_editing: item.content,
+                                new_block: item.type
+                              })
+                            }}></a>
+                            <a href="#" className="icon-trash" onClick={(e) => {
+                              e.preventDefault()
+                              this.remove(item.id, item.file)
+                            }}></a>
+                          </div>
+                          {(item.type != 'code') ? (<div dangerouslySetInnerHTML={{__html: atob(item.content)}}></div>) : (
+                            <div className="editor-code" data-color-mode="dark">
+                              <span className="lang-tag">{item.tag_lang}</span>
+                              <a href="#" className="copy" onClick={(e) => {
+                                e.preventDefault();
+                                navigator.clipboard.writeText(atob(item.content))
+                                alert('¡Copiado!')
+                              }}>Copiar</a>
+                              <CodeEditor 
+                                readOnly={true}
+                                value={atob(item.content)} 
+                                language={item.lang}
+                                padding={17}
+                                style={{
+                                  fontSize: 17,
+                                  backgroundColor: "#303841",
+                                  fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+                                }}
+                              />
+                            </div>
+                          )}
                         </div>
-                        {(item.type != 'code') ? (<div dangerouslySetInnerHTML={{__html: atob(item.content)}}></div>) : (
+                      )
+                  }else {
+                    return (
+                      <>
+                        {item.type != 'code' ? (
+                          <div key={item.id} dangerouslySetInnerHTML={{__html: atob(item.content)}}></div>
+                        ) : (
                           <div className="editor-code" data-color-mode="dark">
                             <span className="lang-tag">{item.tag_lang}</span>
                             <a href="#" className="copy" onClick={(e) => {
@@ -179,8 +296,8 @@ class Documentacion extends React.Component {
                               navigator.clipboard.writeText(atob(item.content))
                               alert('¡Copiado!')
                             }}>Copiar</a>
-                            <CodeEditor 
-                              readOnly={true}
+                            <CodeEditor
+                              readOnly={true} 
                               value={atob(item.content)} 
                               language={item.lang}
                               padding={17}
@@ -192,57 +309,47 @@ class Documentacion extends React.Component {
                             />
                           </div>
                         )}
-                      </div>
+                      </>
                     )
-                }else {
-                  return (
-                    <>
-                      {item.type != 'code' ? (
-                        <div key={item.id} dangerouslySetInnerHTML={{__html: atob(item.content)}}></div>
-                      ) : (
-                        <div className="editor-code" data-color-mode="dark">
-                          <span className="lang-tag">{item.tag_lang}</span>
-                          <a href="#" className="copy" onClick={(e) => {
-                            e.preventDefault();
-                            navigator.clipboard.writeText(atob(item.content))
-                            alert('¡Copiado!')
-                          }}>Copiar</a>
-                          <CodeEditor
-                            readOnly={true} 
-                            value={atob(item.content)} 
-                            language={item.lang}
-                            padding={17}
-                            style={{
-                              fontSize: 17,
-                              backgroundColor: "#303841",
-                              fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-                            }}
-                          />
-                        </div>
-                      )}
-                    </>
-                  )
-                }
-              })}
+                  }
+                })}
 
-              {this.state.new_block == 'text' && (
-                <Editor onInsert={html => this.insert({type: 'text', html: html})}/>
-              )}
+                {this.state.new_block == 'text' && (
+                  <Editor 
+                    content={this.state.content_editing}
+                    onInsert={html => {
+                      if(this.state.id_editing != null) {
+                        this.update({html: html})
+                      }else {
+                        this.insert({type: 'text', html: html})
+                      }
+                    }}
+                  />
+                )}
 
-              {this.state.new_block == 'imagen' && (
-                <Imagen onInsert={(data, file) => this.insert({type: 'imagen', html: data, file: file})}/>
-              )}
+                {this.state.new_block == 'imagen' && (
+                  <Imagen content={this.state.content_editing} onInsert={(data, file) => this.insert({type: 'imagen', html: data, file: file})}/>
+                )}
 
-              {this.state.new_block == 'video' && (
-                <Video onInsert={(html) => this.insert({type: 'video', html: html})}/>
-              )}
+                {this.state.new_block == 'video' && (
+                  <Video content={this.state.content_editing} onInsert={(html) => this.insert({type: 'video', html: html})}/>
+                )}
 
-              {this.state.new_block == 'code' && (
-                <Code onInsert={(data) => this.insert({type: 'code', html: data.code, lang: data.lang, tag_lang: data.tag_lang})}/>
-              )}
-            </>
-          )}  
-        </section>
+                {this.state.new_block == 'code' && (
+                  <Code content={this.state.content_editing} onInsert={(data) => this.insert({type: 'code', html: data.code, lang: data.lang, tag_lang: data.tag_lang})}/>
+                )}  
+              </>
+            )}  
+          </section>
+        )}
+        {this.state.code_login && (
+          <div className="content">
+            <div className="require-code">
+              <label>Ingresa el código de acceso</label>
+              <input type="password" value={this.state.code} style={{borderColor: this.props.config.terciario}} placeholder="####" onChange={(e) => this.setCode(e.target.value)} />
+            </div>
+          </div>
+        )}
         {this.props.admin && (
           <Admin 
             active={this.state.new_block}

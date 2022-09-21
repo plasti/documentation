@@ -100,7 +100,8 @@ export default function App() {
           linkedin: data.config.linkedin,
           whatsapp: data.config.whatsapp,
           youtube: data.config.youtube,
-          web: data.config.web
+          web: data.config.web,
+          code_login: data.config.code_login
         }
         document.title = store.title
         icon(url+'/'+store.favicon)
