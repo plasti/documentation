@@ -129,7 +129,7 @@ export default class Aside extends React.Component {
     }).then(data =>  {
       if(data.status) {
         let menu = this.state.menu
-        menu = menu.push(data.data)
+        menu.push(data.data)
         this.setState({menu: menu, item: '', desplegable: false});
       }
     })

@@ -271,6 +271,7 @@ class Documentacion extends React.Component {
                               <span className="lang-tag">{item.tag_lang}</span>
                               <a href="#" className="copy" onClick={(e) => {
                                 e.preventDefault();
+                                alert('¡copiado!')
                                 navigator.clipboard.writeText(atob(item.content))
                               }}>Copiar</a>
                               <CodeEditor 
@@ -298,8 +299,8 @@ class Documentacion extends React.Component {
                             <span className="lang-tag">{item.tag_lang}</span>
                             <a href="#" className="copy" onClick={(e) => {
                               e.preventDefault();
-                              navigator.clipboard.writeText(atob(item.content))
                               alert('¡Copiado!')
+                              navigator.clipboard.writeText(atob(item.content))
                             }}>Copiar</a>
                             <CodeEditor
                               readOnly={true} 
