@@ -135,6 +135,7 @@ export default function App() {
               secundario={config.secundario}
               terciario={config.terciario}
               logo={config.logo}
+              favicon={config.favicon}
               title={config.title}
             />
             <AnimatedRoutes config={config} admin={admin} setLogin={(v) => setAdmin(v)}/>

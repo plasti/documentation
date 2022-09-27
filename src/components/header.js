@@ -141,12 +141,13 @@ export default class Header extends React.Component {
             title={this.props.title} 
             className="logo"
           >
-            <img src={url+'/'+this.props.logo} title={this.props.title}/>
+            <img className="logo-big" src={url+'/'+this.props.logo} title={this.props.title}/>
+            <img className="logo-small" src={url+'/'+this.props.favicon} title={this.props.title}/>
           </NavLink>
           <nav>
             <NavLink to="/" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}}>Inicio</NavLink>
             <NavLink to="/documentacion/inicio" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}}>Documentación</NavLink>
-            <NavLink to="/foro" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}} href="#">Foro</NavLink>
+            {/*<NavLink to="/foro" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}} href="#">Foro</NavLink>*/}
             <NavLink to="/contacto" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}} href="#">Contacto</NavLink>
             <a 
               href="#" 

@@ -10,7 +10,7 @@ import Documentacion from '../docs/documentacion';
 
 
 // foro
-import Foro from '../foro/foro';  
+// import Foro from '../foro/foro';  
 
 // contacto
 import Contacto from '../contacto/contacto';
@@ -39,7 +39,7 @@ function AnimatedRoutes(props) {
         <Route path="documentacion/:item" element={<Documentacion navigate={navigate} config={config} admin={admin}/>}/>
 
         {/*foto*/}
-        <Route path="foro" element={<Foro navigate={navigate}/>}/>
+        {/*<Route path="foro" element={<Foro navigate={navigate}/>}/>*/}
 
       {/*contacto*/}
         <Route path="contacto" element={<Contacto config={config} navigate={navigate}/>}/>

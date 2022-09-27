@@ -40,6 +40,13 @@ export default class CodeComponent extends React.Component {
     }
   }
 
+  componentDidMount() {
+    if(this.props.content != null) {
+      this.setState({code: atob(this.props.content), language: this.props.lang})
+    }
+  }
+
+
   insert() {
     this.props.onInsert({code: this.state.code, lang: this.state.language, tag_lang: this.langs[this.state.language]})
     this.setState({code: null})
@@ -51,7 +58,7 @@ export default class CodeComponent extends React.Component {
         <div className="header-editor">
           <div style={{display: 'flex', alignItems: 'center'}}>
             <div className="camp">
-              <select name="language" style={{width: 120}} onChange={(e) => this.setState({language: e.target.value})} defaultValue={this.state.language}>
+              <select name="language" style={{width: 120}} onChange={(e) => this.setState({language: e.target.value})} value={this.state.language}>
                 <option value="ino">Arduino</option>
                 <option value="sh">Bash</option>
                 <option value="c">C</option>

@@ -16,6 +16,7 @@ export default class Aside extends React.Component {
       link: '',
       item: '',
       desplegable: false,
+      active: false,
     }
   }
 
@@ -171,88 +172,102 @@ export default class Aside extends React.Component {
   }
   render() {
     return (
-      <aside className="menu-left">
-        {this.state.loading ? (<Loader repeat={15} />) : (
-          <>
-            {this.state.menu.map((item) => {
-              if(item.type == 'simple') {
-                return (
-                  <div className={`${(this.props.active == (item.id+'_'+item.content+'.json')) ? "active" : ""} simple big`} key={item.id}>
-                    {this.props.admin && (<a href="#" className="delete" onClick={() => this.deleteItem(item.id, 'item')}>x</a>)}
-                    <a href="#" onClick={(e) => {
-                      e.preventDefault()
-                      this.props.onSelect({
-                        file: item.id+'_'+item.content+'.json',
-                        title: item.title,
-                        subtitle: null,
-                        keywords: item.keywords,
-                        type: 'item', 
-                        id: item.id,
-                        id_subitem: null
-                      })
-                      window.history.pushState(null, "", item.content);
-                    }}>{item.title}</a>
-                  </div>
-                )
-              }else {
-                return (
-                  <details key={item.id}>
-                    <summary style={{borderColor: this.props.colorBorder}}>
-                    {this.props.admin && (<a href="#" className="delete" onClick={() => this.deleteItem(item.id, 'desplegable')}>x</a>)}
-                      {item.title}
-                    </summary>
-                    <div style={{paddingLeft: 10}}>
-                      {item.items.map((subitem) => (
-                        <div className={`${(this.props.active == (subitem.id+'_'+subitem.content+'.json')) ? "active" : ""} simple`} key={String(item.id+'_'+subitem.id)}>
-                          {this.props.admin && (<a href="#" className="delete" onClick={() => this.deleteSubItem(item.id, subitem.id)}>x</a>)}
-                          <a onClick={(e) => {
-                            e.preventDefault()
-                            this.props.onSelect({
-                              file: subitem.id+'_'+subitem.content+'.json',
-                              title: item.title,
-                              subtitle: subitem.title,
-                              keywords: subitem.keywords,
-                              type: 'subitem', 
-                              id: item.id,
-                              id_subitem: subitem.id
-                            })
-                            window.history.pushState(null, "", item.content+'&'+subitem.content);
-                          }} href="#">{subitem.title}</a>
-                        </div>
-                      ))}
-                      {this.props.admin && (
-                        <form className="add-item" onSubmit={this.setSubitemLink}>
-                          <input type="hidden" name="id_parent" value={item.id} />
-                          <input type="text" name="title" placeholder="Agregar item" value={this.state.link} onChange={(e) => this.setState({link: e.target.value})}/>
-                          <button>❯</button>
-                        </form>
-                      )}
+      <>
+        <a 
+          href="#"
+          style={{backgroundColor: this.props.primario}} 
+          className={`btn-show-menu ${this.state.active ? "active" : ""}`}
+          onClick={(e) => {
+          e.preventDefault()
+          this.setState({active: !this.state.active})
+        }}>
+          <span style={{backgroundColor: this.props.color}}></span>
+          <span style={{backgroundColor: this.props.color}}></span>
+          <span style={{backgroundColor: this.props.color}}></span>
+        </a>
+        <aside className={`menu-left ${this.state.active ? "active" : ""}`}>
+          {this.state.loading ? (<Loader repeat={15} />) : (
+            <>
+              {this.state.menu.map((item) => {
+                if(item.type == 'simple') {
+                  return (
+                    <div className={`${(this.props.active == (item.id+'_'+item.content+'.json')) ? "active" : ""} simple big`} key={item.id}>
+                      {this.props.admin && (<a href="#" className="delete" onClick={() => this.deleteItem(item.id, 'item')}>x</a>)}
+                      <a href="#" onClick={(e) => {
+                        e.preventDefault()
+                        this.props.onSelect({
+                          file: item.id+'_'+item.content+'.json',
+                          title: item.title,
+                          subtitle: null,
+                          keywords: item.keywords,
+                          type: 'item', 
+                          id: item.id,
+                          id_subitem: null
+                        })
+                        window.history.pushState(null, "", item.content);
+                      }}>{item.title}</a>
                     </div>
-                  </details>
-                )
-              }
-            })}
-          </>
-        )}
-        {this.props.admin && (
-          <form className="add-item-2" onSubmit={this.setItem}>
-            <input type="text" name="title" placeholder="Agregar item.." value={this.state.item} onChange={(e) => this.setState({item: e.target.value})}/>
-            <label className="toggle">
-              <span>Item / Desplegable</span>
-              <Switch 
-                    onChange={(c) =>  this.setState({desplegable: c})} 
-                    checked={this.state.desplegable} 
-                    onColor="#42da00"
-                    uncheckedIcon={false}
-                    checkedIcon={false}
-                    height={15}
-                    width={30}
-                  />
-            </label>
-            <button>Agregar</button>
-          </form>
-        )}
-      </aside>
+                  )
+                }else {
+                  return (
+                    <details key={item.id}>
+                      <summary style={{borderColor: this.props.colorBorder}}>
+                      {this.props.admin && (<a href="#" className="delete" onClick={() => this.deleteItem(item.id, 'desplegable')}>x</a>)}
+                        {item.title}
+                      </summary>
+                      <div style={{paddingLeft: 10}}>
+                        {item.items.map((subitem) => (
+                          <div className={`${(this.props.active == (subitem.id+'_'+subitem.content+'.json')) ? "active" : ""} simple`} key={String(item.id+'_'+subitem.id)}>
+                            {this.props.admin && (<a href="#" className="delete" onClick={() => this.deleteSubItem(item.id, subitem.id)}>x</a>)}
+                            <a onClick={(e) => {
+                              e.preventDefault()
+                              this.props.onSelect({
+                                file: subitem.id+'_'+subitem.content+'.json',
+                                title: item.title,
+                                subtitle: subitem.title,
+                                keywords: subitem.keywords,
+                                type: 'subitem', 
+                                id: item.id,
+                                id_subitem: subitem.id
+                              })
+                              window.history.pushState(null, "", item.content+'&'+subitem.content);
+                            }} href="#">{subitem.title}</a>
+                          </div>
+                        ))}
+                        {this.props.admin && (
+                          <form className="add-item" onSubmit={this.setSubitemLink}>
+                            <input type="hidden" name="id_parent" value={item.id} />
+                            <input type="text" name="title" placeholder="Agregar item" value={this.state.link} onChange={(e) => this.setState({link: e.target.value})}/>
+                            <button>❯</button>
+                          </form>
+                        )}
+                      </div>
+                    </details>
+                  )
+                }
+              })}
+            </>
+          )}
+          {this.props.admin && (
+            <form className="add-item-2" onSubmit={this.setItem}>
+              <input type="text" name="title" placeholder="Agregar item.." value={this.state.item} onChange={(e) => this.setState({item: e.target.value})}/>
+              <label className="toggle">
+                <span>Item / Desplegable</span>
+                <Switch 
+                      onChange={(c) =>  this.setState({desplegable: c})} 
+                      checked={this.state.desplegable} 
+                      onColor="#42da00"
+                      uncheckedIcon={false}
+                      checkedIcon={false}
+                      height={15}
+                      width={30}
+                    />
+              </label>
+              <button>Agregar</button>
+            </form>
+          )}
+        </aside>
+      </>
     )
   }
 }

@@ -16,6 +16,32 @@ export default class ImagenComponent extends React.Component {
     };
   }
 
+  componentDidMount() {
+    if(this.props.content != null) {
+      let parser = new DOMParser()
+      let doc = parser.parseFromString(atob(this.props.content), 'text/html')
+      let img = doc.body.lastElementChild
+      let url = img.getAttribute('src')
+      let w = img.style.width.replace('px', '');
+      let r = img.style.borderRadius.replace('px', '');
+      let mTop = img.style.marginTop.replace('px', '');
+      let mLeft = img.style.marginLeft.replace('px', '');
+      let mRight = img.style.marginRight.replace('px', '');
+      let mBottom = img.style.marginBottom.replace('px', '');
+      this.setState({
+        w: w,
+        r: r,
+        mTop: mTop,
+        mLeft: mLeft,
+        mRight: mRight,
+        mBottom: mBottom,
+        imagen: url
+      })
+    }
+  }
+
+
+
   selectImage(e) {
     if (!e.target.files || !e.target.files[0]) return;
     const setImg = img => {
@@ -45,18 +71,24 @@ export default class ImagenComponent extends React.Component {
   }
 
   insert() {
-    if(this.state.imagen != null) {
-      post({
-        action: 'upload',
-        name: 'img.'+this.state.extension,
-        file: this.state.imagen,
-      }).then(data => {
-        if(data.status) {
-          let html = '<img src="'+url+'/'+data.data+'" style="width: '+this.state.w+'px; height: auto; border-radius: '+this.state.r+'px; margin-top: '+this.state.mTop+'px; margin-left: '+this.state.mLeft+'px; margin-right: '+this.state.mRight+'px; margin-bottom: '+this.state.mBottom+'px"/>';
-          this.props.onInsert(html, data.data)
-          this.clearImg()
-        } 
-      })
+    if(this.props.content != null) {
+      let html = '<img src="'+this.state.imagen+'" style="width: '+this.state.w+'px; height: auto; border-radius: '+this.state.r+'px; margin-top: '+this.state.mTop+'px; margin-left: '+this.state.mLeft+'px; margin-right: '+this.state.mRight+'px; margin-bottom: '+this.state.mBottom+'px"/>';
+      this.props.onInsert(html)
+      this.clearImg()
+    }else {
+      if(this.state.imagen != null) {
+        post({
+          action: 'upload',
+          name: 'img.'+this.state.extension,
+          file: this.state.imagen,
+        }).then(data => {
+          if(data.status) {
+            let html = '<img src="'+url+'/'+data.data+'" style="width: '+this.state.w+'px; height: auto; border-radius: '+this.state.r+'px; margin-top: '+this.state.mTop+'px; margin-left: '+this.state.mLeft+'px; margin-right: '+this.state.mRight+'px; margin-bottom: '+this.state.mBottom+'px"/>';
+            this.props.onInsert(html, data.data)
+            this.clearImg()
+          } 
+        })
+      }
     }
   }
 
@@ -114,7 +146,7 @@ export default class ImagenComponent extends React.Component {
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <span className="msg-editor"></span>
           <div>
-            {this.state.imagen != null && (
+            {(this.state.imagen != null && this.props.content == null) && (
               <a className="btn-inser" href="#" onClick={() => this.clearImg()}>Borrar</a>
             )}
             <a className="btn-inser" href="#" onClick={(e) => {e.preventDefault(); this.insert()}}>Insertar</a>

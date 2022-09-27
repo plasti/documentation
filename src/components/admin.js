@@ -13,6 +13,7 @@ export default class Admin extends React.Component {
 
   selectBlock(e, type) {
     e.preventDefault()
+    window.scrollTo(0, document.querySelector('#to_edit').getBoundingClientRect().top + window.scrollY)
     this.props.changeBlock(type)
   }
 

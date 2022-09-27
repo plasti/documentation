@@ -37,7 +37,9 @@ class Documentacion extends React.Component {
       code: '',
       // -------
       id_editing: null,
-      content_editing: null, 
+      content_editing: null,
+      lang: null,
+      tag_lang: null, 
     }
   }
   componentDidMount() {
@@ -141,7 +143,7 @@ class Documentacion extends React.Component {
     if("tag_lang" in data) {
       content[index].tag_lang = data.tag_lang
     }
-    this.setState({content: content, id_editing: null, new_block: null, content_editing: null})
+    this.setState({content: content, id_editing: null, new_block: null, content_editing: null, lang: null, tag_lang: null})
   }
 
   remove(id, file = null) {
@@ -181,6 +183,8 @@ class Documentacion extends React.Component {
         {/*Menu*/}
         <Aside 
           colorBorder={this.props.config.terciario} 
+          color={this.props.config.secundario} 
+          primario={this.props.config.primario} 
           admin={this.props.admin} 
           active={this.state.file}
           slug={this.props.params.item}
@@ -240,7 +244,6 @@ class Documentacion extends React.Component {
                           <div className="access-btn">
                             <a href="#" className="icon-up" onClick={(e) => {
                               e.preventDefault()
-                              console.log('up')
                               this.moveUp(item.id)
                             }}></a>
                             <a href="#" className="icon-down" onClick={(e) => {
@@ -249,10 +252,13 @@ class Documentacion extends React.Component {
                             }}></a>
                             <a href="#" className="icon-edit" onClick={(e) => {
                               e.preventDefault()
+                              window.scrollTo(0, document.querySelector('#to_edit').getBoundingClientRect().top + window.scrollY)
                               this.setState({
                                 id_editing: item.id,
                                 content_editing: item.content,
-                                new_block: item.type
+                                new_block: item.type,
+                                lang: item.type == 'code' ? item.lang : null,
+                                tag_lang: item.type == 'code' ? item.tag_lang : null,
                               })
                             }}></a>
                             <a href="#" className="icon-trash" onClick={(e) => {
@@ -266,7 +272,6 @@ class Documentacion extends React.Component {
                               <a href="#" className="copy" onClick={(e) => {
                                 e.preventDefault();
                                 navigator.clipboard.writeText(atob(item.content))
-                                alert('¡Copiado!')
                               }}>Copiar</a>
                               <CodeEditor 
                                 readOnly={true}
@@ -314,30 +319,59 @@ class Documentacion extends React.Component {
                   }
                 })}
 
-                {this.state.new_block == 'text' && (
-                  <Editor 
-                    content={this.state.content_editing}
-                    onInsert={html => {
+                
+                <div id="to_edit">
+                  {this.state.new_block == 'text' && (
+                    <Editor 
+                      content={this.state.content_editing}
+                      onInsert={html => {
+                        if(this.state.id_editing != null) {
+                          this.update({html: html})
+                        }else {
+                          this.insert({type: 'text', html: html})
+                        }
+                      }}
+                    />
+                  )}
+
+                  {this.state.new_block == 'imagen' && (
+                    <Imagen content={this.state.content_editing} onInsert={(data, file = null) => {
+                      if(this.state.id_editing != null) {
+                        this.update({html: data})
+                      }else {
+                        this.insert({type: 'imagen', html: data, file: file})
+                      }
+                    }}/>
+                  )}
+
+                  {this.state.new_block == 'video' && (
+                    <Video content={this.state.content_editing} onInsert={(html) => {
                       if(this.state.id_editing != null) {
                         this.update({html: html})
                       }else {
-                        this.insert({type: 'text', html: html})
+                        this.insert({type: 'video', html: html})
                       }
-                    }}
-                  />
-                )}
+                    }}/>
+                  )}
 
-                {this.state.new_block == 'imagen' && (
-                  <Imagen content={this.state.content_editing} onInsert={(data, file) => this.insert({type: 'imagen', html: data, file: file})}/>
-                )}
-
-                {this.state.new_block == 'video' && (
-                  <Video content={this.state.content_editing} onInsert={(html) => this.insert({type: 'video', html: html})}/>
-                )}
-
-                {this.state.new_block == 'code' && (
-                  <Code content={this.state.content_editing} onInsert={(data) => this.insert({type: 'code', html: data.code, lang: data.lang, tag_lang: data.tag_lang})}/>
-                )}  
+                  {this.state.new_block == 'code' && (
+                    <Code 
+                      content={this.state.content_editing} 
+                      lang={this.state.lang}
+                      tag_lang={this.state.tag_lang}
+                      onInsert={(data) => {
+                        if(this.state.id_editing != null) {
+                          this.update({
+                            html: data.code,
+                            lang: data.lang,
+                            tag_lang: data.tag_lang
+                          })
+                        }else {
+                          this.insert({type: 'code', html: data.code, lang: data.lang, tag_lang: data.tag_lang})
+                        }
+                    }}/>
+                  )}  
+                </div>
               </>
             )}  
           </section>
@@ -353,7 +387,12 @@ class Documentacion extends React.Component {
         {this.props.admin && (
           <Admin 
             active={this.state.new_block}
-            changeBlock={(block) => this.setState({new_block: block})}
+            changeBlock={(block) => {
+              if(block == '') {
+                this.setState({lang: null, tag_lang: null, id_editing: null, content_editing: null})
+              }
+              this.setState({new_block: block})
+            }}
             save={() => this.saveContent()}
             navigate={(ruta) => this.props.navigate(ruta)}
           />

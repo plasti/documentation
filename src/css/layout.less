@@ -17,6 +17,42 @@ html {
 		border: 2px solid @f;
 		border-radius: 5px;
 	}
+	scroll-behavior: smooth;
+}
+.btn-show-menu.active {
+	left: 260px;
+	span:first-child {
+		display: none;
+	}
+	span {
+		transform: rotate(-45deg) translateX(-2px);
+		width: 15px;
+	}
+	span:last-child {
+		transform: rotate(45deg) translateX(-2px);
+	}
+}
+.btn-show-menu {
+	display: none;
+	justify-content: space-around;
+	align-items: center;
+	flex-direction: column;
+	position: fixed;
+	padding: 7px 0;
+	top: 65px;
+	left: 5px;
+	width: 40px;
+	height: 40px;
+	background-color: #fff;
+	border-radius: 50%;
+	z-index: 100;
+	transition: all 0.3s;
+	span {
+		transition: all 0.3s;
+		display: block;
+		width: 20px;
+		height: 2px;
+	}
 }
 .main {
 	display: block;
@@ -50,6 +86,9 @@ html {
 					height: 100%;
 					width: auto;
 					display: block;
+				}
+				.logo-small {
+					display: none;
 				}
 			}
 			nav {
@@ -854,5 +893,120 @@ html {
 		background-color: #eaeaea;
 		border: 2px solid;
 		outline: none;
+	}
+}
+
+
+
+@media screen and(max-width: 1024px) {
+	.main .contiainer-content .content {
+		padding: 40px 10px;
+	}
+	.main {
+		header {
+			.ancho nav .search {
+				font-size: 0;
+				width: 50px;
+				.search-icon {
+					margin-right: 0;
+					width: 22px;
+				}
+			}
+			.ancho .logo {
+				width: auto;
+			}
+			.ancho nav a {
+				font-size: 1rem;
+				padding: 10px 5px;
+				font-weight: 400;
+			}
+		}
+		header .ancho .logo img.logo-big {display: none;}
+		header .ancho .logo img.logo-small {display: block;}
+		.btn-show-menu {
+			display: flex;
+		}
+		.contiainer-content {
+			.menu-left {
+				transition: all 0.3s;
+				position: fixed;
+				width: 250px;
+				height: 100%;
+				background-color: #fff;
+				z-index: 1000;
+				top: 60px;
+				left: -300px;
+				box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.5);
+			}
+			.menu-left.active {
+				left: 0
+			}
+			.content {
+				width: 100%;
+				flex: 1;
+			}
+		}
+	}
+
+	.main .contiainer-content .content h1 {
+		font-size: 2.5rem;
+	}
+	.main .contiainer-content .content .video iframe {
+		width: 100%;
+		height: 230px;
+	}
+	.main .home .ancho {
+		padding: 0 10px;
+		h1 {
+			font-size: 2.5rem;
+		}
+		h2 {
+			font-size: 1.5rem;
+		}
+		.btns {
+			.btn {
+				display: block;
+				text-align: center;
+				margin: 10px auto;
+			}
+		}
+
+	}
+	.main .home .ancho form .inputs {
+		flex-wrap: wrap;
+		input {
+			margin: 10px 0;
+		}
+	}
+	.main footer .ancho .columns {
+		display: block;
+	}
+	.main footer .ancho .columns div {
+		width: 90%;
+		margin: 30px auto;
+		text-align: center;
+	}
+	.main footer .ancho .columns div .menu-foo {
+		align-items: center;
+		margin: 10px auto;
+	}
+	.panel-admin a {
+		padding: 4px;
+	}
+	.panel-admin .vertical {
+		margin: 0 10px;
+	}
+}
+
+@media screen and(max-width: 500px) {
+	.main header .ancho .logo img {height: 70%;}
+	.main header .ancho nav a {
+		font-size: 15px;
+		padding: 7px 2px;
+	}
+	.main header .ancho nav .search {
+		margin-left: 5px;
+		width: 40px;
+		padding: 7px;
 	}
 }

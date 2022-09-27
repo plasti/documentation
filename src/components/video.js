@@ -10,6 +10,16 @@ export default class VideoComponent extends React.Component {
     };
   }
 
+
+  componentDidMount() {
+    if(this.props.content != null) {
+      let parser = new DOMParser()
+      let doc = parser.parseFromString(atob(this.props.content), 'text/html')
+      let new_url = doc.body.lastElementChild.children[0].getAttribute('src')
+      this.setState({url_video: new_url})
+    }
+  }
+
   insert() {
     if(this.state.url_video != null) {
       let html = '<div class="video"><iframe src="'+this.state.url_video+'" frameborder="0"></iframe></div>'
