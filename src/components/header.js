@@ -147,6 +147,7 @@ export default class Header extends React.Component {
           <nav>
             <NavLink to="/" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}}>Inicio</NavLink>
             <NavLink to="/documentacion/inicio" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}}>Documentación</NavLink>
+            <NavLink to="/app" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}} href="#">App móvil</NavLink>
             {/*<NavLink to="/foro" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}} href="#">Foro</NavLink>*/}
             <NavLink to="/contacto" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}} href="#">Contacto</NavLink>
             <a 

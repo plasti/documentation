@@ -12,6 +12,9 @@ import Documentacion from '../docs/documentacion';
 // foro
 // import Foro from '../foro/foro';  
 
+// app mobil
+import AppMobil from '../app-mobile/app';  
+
 // contacto
 import Contacto from '../contacto/contacto';
 
@@ -41,7 +44,10 @@ function AnimatedRoutes(props) {
         {/*foto*/}
         {/*<Route path="foro" element={<Foro navigate={navigate}/>}/>*/}
 
-      {/*contacto*/}
+        {/*app*/}
+        {<Route path="app" element={<AppMobil config={config} navigate={navigate}/>}/>}
+
+        {/*contacto*/}
         <Route path="contacto" element={<Contacto config={config} navigate={navigate}/>}/>
 
         {/*Instalacion*/}

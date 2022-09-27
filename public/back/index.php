@@ -259,4 +259,7 @@ if($action == 'send_mail') {
 	mail($config->email, $config->title.' - Nuevo contacto', $html);
 	echo json_encode(['status' => true]);
 }
+if($action == 'download-from-app') {
+	echo "Ok";
+}
 ?>

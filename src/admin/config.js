@@ -203,7 +203,7 @@ export default class Install extends React.Component {
               </label>
             </div>
             <div className="form-group">
-              <label>Código para ingresar a la documentación</label>
+              <label>Código de ingreso</label>
               <input type="text" placeholder="..." value={this.state.code_login} name="code_login" onChange={(e) => this.handleInput(e)} />
             </div>
             <div className="btns">
