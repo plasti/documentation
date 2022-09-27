@@ -21,6 +21,7 @@ import Contacto from '../contacto/contacto';
 // instalacion
 import Config from '../admin/config';
 import Login from '../admin/login';
+import Page404 from '../404/page404';
 
 
 // screens
@@ -53,6 +54,7 @@ function AnimatedRoutes(props) {
         {/*Instalacion*/}
         <Route path="/settings" element={<Config navigate={navigate} admin={admin}/>}/>
         <Route path="/login" element={<Login navigate={navigate} setLogin={setLogin}/>}/>
+        <Route path="*" element={<Page404 navigate={navigate} config={config}/>}/>
       </Routes>
     </AnimatePresence>
 	)

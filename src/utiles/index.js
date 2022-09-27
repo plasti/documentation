@@ -1,4 +1,4 @@
-var host = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? 'http://localhost/documentation/public/back/index.php' : (window.location.protocol+'//'+window.location.hostname+'/back');
+var host = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? 'http://localhost/documentation/public/back/index.php' : (window.location.protocol+'//'+window.location.hostname+'/back/index.php');
 
 const post = (data) => {
 	return new Promise((resolve, reject) => {

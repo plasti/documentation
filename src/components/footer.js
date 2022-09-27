@@ -29,6 +29,7 @@ export default class Footer extends React.Component {
               <div className="menu-foo">
                 <NavLink to="/" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}}>Inicio</NavLink>
                 <NavLink to="/documentacion/inicio" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}}>Documentación</NavLink>
+                {/*<NavLink to="/app" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}}>App móvil</NavLink>*/}
                 {/*<NavLink to="/foro" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}} href="#">Foro</NavLink>*/}
                 <NavLink to="contacto" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}} href="#">Contacto</NavLink>
               </div>
@@ -39,12 +40,17 @@ export default class Footer extends React.Component {
                 title={this.props.title} 
                 className="logo"
               >
-                <img src={url+'/'+this.props.logo} title={this.props.title}/>
+                {this.props.logo != undefined ? (
+                  <img src={url+'/'+this.props.logo} title={this.props.title}/>
+                ) : (
+                  <img src={require('../img/logo.png')} title={this.props.title}/>
+                )}
               </NavLink>
             </div>
           </div>
         </div>
-        <span className="copy" style={{color: this.props.secundario}}>&copy; {this.props.title}  - {new Date().getFullYear()}</span>
+        <span className="copy" style={{color: this.props.secundario}}>&copy; {this.props.title}  - {new Date().getFullYear()}</span><br/>
+        {localStorage.getItem('@login_documentation') == 'ZXN0YSBhdXRlbnRpY2Fkbw==' ? (<NavLink to="/setting" className="copy" style={{color: this.props.secundario}}>Configuración</NavLink>) : (<NavLink to="/login" className="copy" style={{color: this.props.secundario}}>Ingresar</NavLink>)}
       </footer> 
     )
   }

@@ -108,7 +108,11 @@ export default function App() {
         setConfig(store);
         setLoadig(false)
       }else {
-        window.location.href = '/settings'
+        setAdmin(true)
+        setLoadig(false)
+        if(window.location.pathname == '/') {
+          window.location.href = '/settings'
+        }
       }
     });
   }
