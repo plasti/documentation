@@ -9,6 +9,7 @@ import Admin from '../components/admin'
 import Modal from '../components/modal';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import withParams from '../utiles/withparams';
+import { NavLink } from "react-router-dom";
 
 Array.prototype.move = function (from, to) {
   this.splice(to, 0, this.splice(from, 1)[0]);
@@ -40,6 +41,8 @@ class Documentacion extends React.Component {
       content_editing: null,
       lang: null,
       tag_lang: null, 
+      prev: null,
+      next: null,
     }
   }
   componentDidMount() {
@@ -94,6 +97,8 @@ class Documentacion extends React.Component {
           type: datos.type,
           id: datos.id,
           id_subitem: datos.id_subitem,
+          prev: datos.paginate.prev,
+          next: datos.paginate.next,
           page404: false,
         })
       }else {
@@ -125,7 +130,7 @@ class Documentacion extends React.Component {
         lang: data.lang,
         tag_lang: data.tag_lang
       })
-      this.setState({content: content})
+      this.setState({content: content, new_block: ''})
     }else {
       alert('Selecciona una pagina')
     }
@@ -252,7 +257,6 @@ class Documentacion extends React.Component {
                             }}></a>
                             <a href="#" className="icon-edit" onClick={(e) => {
                               e.preventDefault()
-                              window.scrollTo(0, document.querySelector('#to_edit').getBoundingClientRect().top + window.scrollY)
                               this.setState({
                                 id_editing: item.id,
                                 content_editing: item.content,
@@ -321,7 +325,7 @@ class Documentacion extends React.Component {
                 })}
 
                 
-                <div id="to_edit">
+                <Modal active={this.state.new_block != ''} onClose={() => this.setState({new_block: ''})}>
                   {this.state.new_block == 'text' && (
                     <Editor 
                       content={this.state.content_editing}
@@ -372,9 +376,21 @@ class Documentacion extends React.Component {
                         }
                     }}/>
                   )}  
-                </div>
+                </Modal>
               </>
-            )}  
+            )} 
+
+            {(this.state.next != null || this.state.prev != null) && (
+              <div className="paginate">
+                {this.state.prev != null && (
+                  <NavLink style={{backgroundColor: this.props.config.primario, color: this.props.config.secundario}} to={this.state.prev}>❮ Anterior</NavLink>
+                )}
+                {this.state.next && (
+                  <NavLink style={{backgroundColor: this.props.config.primario, color: this.props.config.secundario}} to={this.state.next}>Siguiente ❯</NavLink>
+                )}
+              </div>
+            )}
+
           </section>
         )}
         {this.state.code_login && (

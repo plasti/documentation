@@ -47,11 +47,27 @@ html {
 	border-radius: 50%;
 	z-index: 100;
 	transition: all 0.3s;
+	border: 1px solid;
 	span {
 		transition: all 0.3s;
 		display: block;
 		width: 20px;
 		height: 2px;
+	}
+}
+.paginate {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	margin: 10px auto;
+	a {
+		display: inline-block;
+		background-color: red;
+		padding: 7px 15px;
+		border-radius: 4px;
+		box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.5);
+		text-decoration: none;
 	}
 }
 .main {
@@ -462,6 +478,8 @@ html {
 						align-items: center;
 						span {
 							margin-right: 7px;
+							font-size: 14px;
+							white-space: nowrap;
 						}
 						input, select {
 							display: inline-block;
@@ -513,6 +531,7 @@ html {
 				--color-canvas-subtle: #161b22;
 				margin: 10px auto;
 				position: relative;
+				min-width: 250px;
 				.lang-tag {
 					&::before {
 						content: '';
@@ -566,15 +585,13 @@ html {
 			.video {
 				width: 100%;
 				display: block;
-				padding: 25px 0;
-				border-top: 1px solid #eaeaea;
-				border-bottom: 1px solid #eaeaea;
 				iframe {
 					display: block;
-					margin: 20px auto;
+					margin: 10px auto;
 					border: 2px solid #000;
 					height: 350px;
-					width: 60%;
+					width: 100%;
+					max-width: 500px;
 				}
 			}
 		}
@@ -935,7 +952,7 @@ html {
 				height: 100%;
 				background-color: #fff;
 				z-index: 1000;
-				top: 60px;
+				top: 0px;
 				left: -300px;
 				box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.5);
 			}
@@ -1000,17 +1017,70 @@ html {
 }
 
 @media screen and(max-width: 500px) {
-	.main header .ancho .logo img {height: 70%;}
-	.main header .ancho nav a {
-		font-size: 15px;
-		padding: 7px 2px;
+	.btn-show-menu {
+		top: 10px;
 	}
-	.main header .ancho nav .search {
-		margin-left: 5px;
-		width: 40px;
-		padding: 7px;
+	.main .contiainer-content .content .RichEditor-root .header-editor .RichEditor-styleButton{
+		font-size: 12px;
+		padding: 4px 7px;
+	}
+	.main .contiainer-content .content .RichEditor-root .header-editor .camp {
+		width: auto;
+		margin: 2px;
+	}
+	.migas {
+		flex-wrap: wrap;
+		div {
+			width: 100%;
+			display: block;
+			margin: 4px auto;
+		}
+	}
+	.nothing {
+		font-size: 2.5rem;
+		display: block;
+		width: 100%;
+		margin: 40px auto;
+		text-align: center;
+	}
+	.main header {
+		height: auto;
+		padding: 10px 0;
+		position: initial;
+		.ancho {
+			display: block;
+			.logo {
+				img.logo-big {
+					display: block;
+					height: auto;
+					width: 50%;
+				}
+				img.logo-small {
+					display: none;
+				}
+			}
+			nav {
+				flex-wrap: wrap;
+				.search {
+					width: 100%;
+					margin: 7px auto;
+					font-size: 17px;
+					.search-icon {
+						margin-right: 10px;
+					}
+				}
+			}
+		}		
 	}
 	.modal .body-modal {
 		width: 95%;
+		img {
+			max-width: 75vw !important;
+		}
+	}
+	.content {
+		img {
+			max-width: 75vw !important;
+		}
 	}
 }

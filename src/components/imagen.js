@@ -50,7 +50,7 @@ export default class ImagenComponent extends React.Component {
       image.src = img;
       this.setState({imagen: img, extension: extension})
       image.onload = () => {
-        this.setState({w: image.width, h: image.height})
+        this.setState({w: (image.width > 500) ? 500 : image.width, h: image.height})
       }
     }
     const FR = new FileReader();
@@ -72,7 +72,7 @@ export default class ImagenComponent extends React.Component {
 
   insert() {
     if(this.props.content != null) {
-      let html = '<img src="'+this.state.imagen+'" style="width: '+this.state.w+'px; height: auto; border-radius: '+this.state.r+'px; margin-top: '+this.state.mTop+'px; margin-left: '+this.state.mLeft+'px; margin-right: '+this.state.mRight+'px; margin-bottom: '+this.state.mBottom+'px"/>';
+      let html = '<img src="'+this.state.imagen+'" style="max-width: 500px; width: '+this.state.w+'px; height: auto; border-radius: '+this.state.r+'px; margin-top: '+this.state.mTop+'px; margin-left: '+this.state.mLeft+'px; margin-right: '+this.state.mRight+'px; margin-bottom: '+this.state.mBottom+'px"/>';
       this.props.onInsert(html)
       this.clearImg()
     }else {
@@ -83,7 +83,7 @@ export default class ImagenComponent extends React.Component {
           file: this.state.imagen,
         }).then(data => {
           if(data.status) {
-            let html = '<img src="'+url+'/'+data.data+'" style="width: '+this.state.w+'px; height: auto; border-radius: '+this.state.r+'px; margin-top: '+this.state.mTop+'px; margin-left: '+this.state.mLeft+'px; margin-right: '+this.state.mRight+'px; margin-bottom: '+this.state.mBottom+'px"/>';
+            let html = '<img src="'+url+'/'+data.data+'" style="max-width: 500px; width: '+this.state.w+'px; height: auto; border-radius: '+this.state.r+'px; margin-top: '+this.state.mTop+'px; margin-left: '+this.state.mLeft+'px; margin-right: '+this.state.mRight+'px; margin-bottom: '+this.state.mBottom+'px"/>';
             this.props.onInsert(html, data.data)
             this.clearImg()
           } 
@@ -96,29 +96,29 @@ export default class ImagenComponent extends React.Component {
     return (
       <div className="RichEditor-root">
         <div className="header-editor">
-          <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{display: 'flex', alignItems: 'center', flexWrap: 'wrap'}}>
             <div className="camp">
-              <span>Tamaño</span>
+              <span>Size</span>
               <input type="number" value={this.state.w} name="w" onChange={(e) => {console.log(e.target.value); this.setState({w: e.target.value})}} />
             </div>
             <div className="camp">
-              <span>Radius</span>
+              <span>R</span>
               <input type="number" value={this.state.r} name="r" onChange={(e) => this.setState({r: e.target.value})} />
             </div>
             <div className="camp">
-              <span>Margin Top</span>
+              <span>MT</span>
               <input type="number" value={this.state.mTop} name="mTop" onChange={(e) => this.setState({mTop: e.target.value})} />
             </div>
             <div className="camp">
-              <span>Margin Left</span>
+              <span>ML</span>
               <input type="number" value={this.state.mLeft} name="mTop" onChange={(e) => this.setState({mLeft: e.target.value})} />
             </div>
             <div className="camp">
-              <span>Margin Right</span>
+              <span>MR</span>
               <input type="number" value={this.state.mRight} name="mTop" onChange={(e) => this.setState({mRight: e.target.value})} />
             </div>
             <div className="camp">
-              <span>Margin bottom</span>
+              <span>MB</span>
               <input type="number" value={this.state.mBottom} name="mBottom" onChange={(e) => this.setState({mBottom: e.target.value})} />
             </div>
           </div>
@@ -138,7 +138,8 @@ export default class ImagenComponent extends React.Component {
               marginTop: this.state.mTop+'px',
               marginLeft: this.state.mLeft+'px',
               marginRight: this.state.mRight+'px',
-              marginBottom: this.state.mBottom+'px'
+              marginBottom: this.state.mBottom+'px',
+              maxWidth: 500
             }}/>
           )}
 

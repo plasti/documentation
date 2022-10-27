@@ -32,6 +32,36 @@ export default class Aside extends React.Component {
             if("items" in content) {
               let item = content.items.filter(m => m.content == slug2)[0];
               if(item != undefined) {
+                let next = null
+
+                if(content.items[content.items.indexOf(item) + 1] != undefined) {
+                  next = "/documentacion/"+content.content+'&'+content.items[content.items.indexOf(item) + 1].content
+                }else {
+                  if(menu[menu.indexOf(content)+1] != undefined) {
+                    if(menu[menu.indexOf(content)+1].type == 'simple') {
+                      next = "/documentacion/"+menu[menu.indexOf(content)+1].content
+                    }else {
+                      if(menu[menu.indexOf(content)+1].items[0] != undefined) {
+                        next = "/documentacion/"+menu[menu.indexOf(content)+1].content+'&'+menu[menu.indexOf(content)+1].items[0].content
+                      }
+                    }
+                  }
+                }
+                let prev = null
+                if(content.items[content.items.indexOf(item) - 1] != undefined) {
+                  prev = "/documentacion/"+content.content+'&'+content.items[content.items.indexOf(item) - 1].content
+                }else {
+                  if(menu[menu.indexOf(content)-1] != undefined) {
+                    if(menu[menu.indexOf(content)-1].type == 'simple') {
+                      prev = "/documentacion/"+menu[menu.indexOf(content)-1].content
+                    }else {
+                      if(menu[menu.indexOf(content)-1].items[menu[menu.indexOf(content)-1].items.length - 1] != undefined) {
+                        prev = "/documentacion/"+menu[menu.indexOf(content)-1].content+'&'+menu[menu.indexOf(content)-1].items[menu[menu.indexOf(content)-1].items.length - 1].content
+                      }
+                    }
+                  }
+                }
+
                 this.props.onSelect({
                   file: item.id+'_'+item.content+'.json',
                   title: content.title,
@@ -39,7 +69,11 @@ export default class Aside extends React.Component {
                   keywords: item.keywords,
                   type: 'subitem', 
                   id: content.id,
-                  id_subitem: item.id
+                  id_subitem: item.id,
+                  paginate:{
+                    prev: prev,
+                    next: next
+                  }
                 })
               }else {
                 this.props.set404(true)
@@ -53,6 +87,26 @@ export default class Aside extends React.Component {
         }else {
           let content = menu.filter(m => m.content == this.props.slug)[0];
           if(content != undefined) {
+            let next = null
+            if(menu[menu.indexOf(content)+1] != undefined) {
+              if(menu[menu.indexOf(content)+1].type == 'simple') {
+                next = "/documentacion/"+menu[menu.indexOf(content)+1].content
+              }else {
+                if(menu[menu.indexOf(content)+1].items[0] != undefined) {
+                  next = "/documentacion/"+menu[menu.indexOf(content)+1].content+'&'+menu[menu.indexOf(content)+1].items[0].content
+                }
+              }
+            }
+            let prev = null
+            if(menu[menu.indexOf(content)-1] != undefined) {
+              if(menu[menu.indexOf(content)-1].type == 'simple') {
+                prev = "/documentacion/"+menu[menu.indexOf(content)-1].content
+              }else {
+                if(menu[menu.indexOf(content)-1].items[menu[menu.indexOf(content)-1].items.length - 1] != undefined) {
+                  prev = "/documentacion/"+menu[menu.indexOf(content)+1].content+'&'+menu[menu.indexOf(content)-1].items[menu[menu.indexOf(content)-1].items.length - 1].content
+                }
+              }
+            }
             this.props.onSelect({
               file: content.id+'_'+content.content+'.json',
               title: content.title,
@@ -60,7 +114,11 @@ export default class Aside extends React.Component {
               keywords: content.keywords,
               type: 'item', 
               id: content.id,
-              id_subitem: null
+              id_subitem: null,
+              paginate:{
+                prev: prev,
+                next: next
+              }
             })
           }else {
             this.props.set404(true)
@@ -70,6 +128,18 @@ export default class Aside extends React.Component {
         let item = menu[0]
         if (item != undefined) {
           if(item.type == 'simple') {
+
+            let next = null
+            if(menu[1] != undefined) {
+              if(menu[1].type == 'simple') {
+                next = "/documentacion/"+menu[1].content
+              }else {
+                if(menu[1].items[0] != undefined) {
+                  next = "/documentacion/"+menu[1].content+'&'+menu[1].items[0].content
+                }
+              }
+            }
+
             this.props.onSelect({
               file: item.id+'_'+item.content+'.json',
               title: item.title,
@@ -77,12 +147,30 @@ export default class Aside extends React.Component {
               keywords: item.keywords,
               type: 'item', 
               id: item.id,
-              id_subitem: null
+              id_subitem: null,
+              paginate:{
+                prev: null,
+                next: next
+              }
             })
           }else {
             if('items' in item) {
               let subitem = item.items[0]
               if(subitem != undefined) {
+                let next = null
+                if(item.items[1] != undefined) {
+                  next = "/documentacion/"+item.content+'&'+item.items[1].content
+                }else {
+                  if(menu[1] != undefined) {
+                    if(menu[1].type == 'simple') {
+                      next = "/documentacion/"+menu[1].content
+                    }else {
+                      if(menu[1].items[0] != undefined) {
+                        next = "/documentacion/"+menu[1].content+'&'+menu[1].items[0].content
+                      }
+                    }
+                  }
+                }
                 this.props.onSelect({
                   file: subitem.id+'_'+subitem.content+'.json',
                   title: item.title,
@@ -90,7 +178,11 @@ export default class Aside extends React.Component {
                   keywords: subitem.keywords,
                   type: 'subitem', 
                   id: item.id,
-                  id_subitem: subitem.id
+                  id_subitem: subitem.id,
+                  paginate:{
+                    prev: null,
+                    next: next
+                  }
                 })
               }
             }
@@ -175,7 +267,7 @@ export default class Aside extends React.Component {
       <>
         <a 
           href="#"
-          style={{backgroundColor: this.props.primario}} 
+          style={{backgroundColor: this.props.primario, borderColor: this.props.color}} 
           className={`btn-show-menu ${this.state.active ? "active" : ""}`}
           onClick={(e) => {
           e.preventDefault()
@@ -188,13 +280,34 @@ export default class Aside extends React.Component {
         <aside className={`menu-left ${this.state.active ? "active" : ""}`}>
           {this.state.loading ? (<Loader repeat={15} />) : (
             <>
-              {this.state.menu.map((item) => {
+              {this.state.menu.map((item, i) => {
                 if(item.type == 'simple') {
                   return (
                     <div className={`${(this.props.active == (item.id+'_'+item.content+'.json')) ? "active" : ""} simple big`} key={item.id}>
                       {this.props.admin && (<a href="#" className="delete" onClick={() => this.deleteItem(item.id, 'item')}>x</a>)}
                       <a href="#" onClick={(e) => {
                         e.preventDefault()
+                        this.setState({active: false})
+                        let prev = null
+                        if(this.state.menu[i - 1] != undefined) {
+                          if(this.state.menu[i - 1].type == 'simple') {
+                            prev = "/documentacion/"+this.state.menu[i - 1].content
+                          }else {
+                            if(this.state.menu[i - 1].items[this.state.menu[i - 1].items.length - 1] != undefined) {
+                              prev = "/documentacion/"+this.state.menu[i - 1].content+'&'+this.state.menu[i - 1].items[this.state.menu[i - 1].items.length - 1].content
+                            }
+                          }
+                        }
+                        let next = null
+                        if(this.state.menu[i + 1] != undefined) {
+                          if(this.state.menu[i + 1].type == 'simple') {
+                            next = "/documentacion/"+this.state.menu[i + 1].content
+                          }else {
+                            if(this.state.menu[i + 1].items[0] != undefined) {
+                              next = "/documentacion/"+this.state.menu[i + 1].content+'&'+this.state.menu[i + 1].items[0].content
+                            }
+                          }
+                        }
                         this.props.onSelect({
                           file: item.id+'_'+item.content+'.json',
                           title: item.title,
@@ -202,7 +315,11 @@ export default class Aside extends React.Component {
                           keywords: item.keywords,
                           type: 'item', 
                           id: item.id,
-                          id_subitem: null
+                          id_subitem: null,
+                          paginate:{
+                            prev: prev,
+                            next: next
+                          }
                         })
                         window.history.pushState(null, "", item.content);
                       }}>{item.title}</a>
@@ -221,6 +338,27 @@ export default class Aside extends React.Component {
                             {this.props.admin && (<a href="#" className="delete" onClick={() => this.deleteSubItem(item.id, subitem.id)}>x</a>)}
                             <a onClick={(e) => {
                               e.preventDefault()
+                              this.setState({active: false})
+                              let prev = null
+                              if(this.state.menu[i - 1] != undefined) {
+                                if(this.state.menu[i - 1].type == 'simple') {
+                                  prev = "/documentacion/"+this.state.menu[i - 1].content
+                                }else {
+                                  if(this.state.menu[i - 1].items[this.state.menu[i - 1].items.length - 1] != undefined) {
+                                    prev = "/documentacion/"+this.state.menu[i - 1].content+'&'+this.state.menu[i - 1].items[this.state.menu[i - 1].items.length - 1].content
+                                  }
+                                }
+                              }
+                              let next = null
+                              if(this.state.menu[i + 1] != undefined) {
+                                if(this.state.menu[i + 1].type == 'simple') {
+                                  next = "/documentacion/"+this.state.menu[i + 1].content
+                                }else {
+                                  if(this.state.menu[i + 1].items[0] != undefined) {
+                                    next = "/documentacion/"+this.state.menu[i + 1].content+'&'+this.state.menu[i + 1].items[0].content
+                                  }
+                                }
+                              }
                               this.props.onSelect({
                                 file: subitem.id+'_'+subitem.content+'.json',
                                 title: item.title,
@@ -228,7 +366,11 @@ export default class Aside extends React.Component {
                                 keywords: subitem.keywords,
                                 type: 'subitem', 
                                 id: item.id,
-                                id_subitem: subitem.id
+                                id_subitem: subitem.id,
+                                paginate:{
+                                  prev: prev,
+                                  next: next
+                                }
                               })
                               window.history.pushState(null, "", item.content+'&'+subitem.content);
                             }} href="#">{subitem.title}</a>

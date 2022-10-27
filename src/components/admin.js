@@ -13,7 +13,6 @@ export default class Admin extends React.Component {
 
   selectBlock(e, type) {
     e.preventDefault()
-    window.scrollTo(0, document.querySelector('#to_edit').getBoundingClientRect().top + window.scrollY)
     this.props.changeBlock(type)
   }
 
@@ -29,7 +28,6 @@ export default class Admin extends React.Component {
         <a href="#" className={`icon-code ${this.props.active == 'code' ? "active" : ""}`} onClick={(e) => this.selectBlock(e, (this.props.active == 'code') ? '' : 'code')} til="Agregar bloque de código"></a>
         <div className="vertical"></div>
         <a href="#" className="icon-save" onClick={(e) => {e.preventDefault(); this.props.save()}} til="Guardar"></a>
-        <a href="#" className="icon-close" til="Cancelar"></a>
       </div>
     )
   }

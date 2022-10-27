@@ -21,8 +21,6 @@ export default function App(props) {
             	<QRCodeCanvas 
             		size={250}
             		value={l} 
-            		bgColor={props.config.primario}
-            		fgColor={props.config.secundario}
             	/>
             </div>
             <p style={{color: props.config.secundario}}>( Si no tienes como escanerar el código QR puedes copiar el siguiente enlace y pegarlo dentro de la app en el campo que dice: URL )</p>

@@ -226,12 +226,28 @@ ul.notifications {
 			margin-bottom: 15px;
 			box-shadow: 0px 0px 2px 0px rgb(0 0 0 / 50%);
 		}
+		.container-results.loader {
+			&::before {
+				content: '';
+				display: block;
+				width: 15px;
+				height: 15px;
+				border-radius: 50%;
+				border-top: 2px solid #111;
+				border-left: 2px solid #111;
+				border-right: 2px solid #111;
+				border-bottom: 2px solid transparent;
+				margin: 5px auto;
+				animation: loader 0.4s linear infinite;
+			}
+		}
 		.container-results {
 			display: block;
 			width: 100%;
 			min-width: 300px;
 			max-height: 60vh;
 			overflow: auto;
+			position: relative;
 			&:hover {
 				&::-webkit-scrollbar-thumb {
 					background-color: @p;
@@ -294,6 +310,9 @@ ul.notifications {
 				}
 				ul {
 					padding-left: 10px;
+					a {
+						margin-bottom: 5px;
+					}
 				}
 				a {
 					background-color: #fff;

@@ -10,6 +10,7 @@ export default class CodeComponent extends React.Component {
       language: 'js',
     };
     this.langs = {
+      'text': 'Link',
       'ino': 'Arduino',
       'sh': 'Bash',
       'c': 'C',
@@ -59,6 +60,7 @@ export default class CodeComponent extends React.Component {
           <div style={{display: 'flex', alignItems: 'center'}}>
             <div className="camp">
               <select name="language" style={{width: 120}} onChange={(e) => this.setState({language: e.target.value})} value={this.state.language}>
+                <option value="text">Link</option>
                 <option value="ino">Arduino</option>
                 <option value="sh">Bash</option>
                 <option value="c">C</option>

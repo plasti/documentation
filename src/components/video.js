@@ -56,7 +56,7 @@ export default class VideoComponent extends React.Component {
     return (
       <div className="RichEditor-root">
         <div className="header-editor">
-          <div style={{display: 'flex', alignItems: 'center'}}>
+          <div style={{display: 'flex', alignItems: 'center', flexWrap: 'wrap'}}>
             <span>URL del video ( Youtube ) :</span>
             <input
               style={{width: '50%', marginLeft: 15}}

@@ -1,16 +1,25 @@
 import React from 'react';
-import {post, url} from '../utiles';
+import {post, url, Levenshtein} from '../utiles';
 import { NavLink } from "react-router-dom";
 import Modal from './modal'
 
-
+var menu = []
+const buscador = (item, valor) => {
+  let keywords = item.keywords.split(', ')
+  let coin = 0
+  for(let key of keywords) {
+    if(Levenshtein(key.toLowerCase(), valor.toLowerCase()) < 3) {
+      coin++
+    }
+  }
+  return coin > 0
+}
 export default class Header extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       modal_search: false,
       keywords: null,
-      menu: [],
       menuShow: [],
       history: [],
     }
@@ -18,9 +27,14 @@ export default class Header extends React.Component {
 
 
   getMenu() {
-    post({action: 'get_menu'}).then(data =>  {
-      let menu = data.menu
-      this.setState({menu: menu, menuShow: [], modal_search: true, keywords: null}, () => this.getHistory())
+    this.setState({modal_search: true}, () => {
+      post({action: 'get_menu'}).then(data =>  {
+        menu = data.menu
+        this.setState({
+          menuShow: menu,
+          keywords: null,
+        }, () => this.getHistory())
+      })
     })
   }
 
@@ -51,26 +65,67 @@ export default class Header extends React.Component {
             placeholder="Buscar algo..." 
             onChange={(e) => {
               if(e.target.value.length > 2) {
-                let t = e.target.value.toLowerCase()
-                let results = this.state.menu.map(item => {
-                  if(item.type == 'simple') {
-                    if(item.keywords.toLowerCase().indexOf(t) > -1) {
-                      return item
-                    }else {
-                      return null
-                    }
+                var a = menu
+                var result = a.filter(ia => {
+                  if("keywords" in ia) {
+                    return buscador(ia, e.target.value)
                   }else {
-                    item.items = item.items.filter(i => i.keywords.toLowerCase().indexOf(t) > -1)
-                    if(item.items.length > 0) {
-                      return item
-                    }else {
-                      return null
-                    }
+                    return true
                   }
                 })
-                this.setState({menuShow: results.filter(o => o != null)})
+                result = result.map(r => {
+                  if("items" in r) {
+                    let i = r.items
+                    i = i.map(sub => {
+                      if(buscador(sub, e.target.value)) {
+                        return sub
+                      }
+                    })
+
+                    if(i.filter(p => p != undefined).length > 0) {
+                      r.items = i.filter(p => p != undefined)
+                      return r
+                    }
+                  }else {
+                    return r
+                  }
+                })
+                result = result.filter(rr => rr != undefined)
+
+                let result2 = a.filter(ia => {
+                  if("keywords" in ia) {
+                    return ia.keywords.toLowerCase().indexOf(e.target.value.toLowerCase()) > -1
+                  }else {
+                    return true
+                  }
+                })
+
+                result2 = result2.map(r => {
+                  if("items" in r) {
+                    let i = r.items
+                    i = i.map(sub => {
+                      if(sub.keywords.toLowerCase().indexOf(e.target.value.toLowerCase()) > -1)  {
+                        return sub
+                      }
+                    })
+                    if(i.filter(p => p != undefined).length > 0) {
+                      r.items = i.filter(p => p != undefined)
+                      return r
+                    }
+                  }else {
+                    return r
+                  }
+                })
+                result2 = result2.filter(rr => rr != undefined)
+                
+                for(let r2 of result2) {
+                 if(result.indexOf(r2) == -1)  {
+                  result.push(r2)
+                 }
+                }
+                this.setState({menuShow: result})
               }else {
-                this.setState({menuShow: []})
+                this.setState({menuShow: menu})
               }
             }}
           />
@@ -87,7 +142,7 @@ export default class Header extends React.Component {
               ))}
             </div>
           )}
-          <div className="container-results">
+          <div className={`container-results ${menu.length > 0 ? "" : "loader"}`}>
             <ul className="results">
               {this.state.menuShow.map(m => {
                 if(m.type == 'simple') {
@@ -156,7 +211,7 @@ export default class Header extends React.Component {
           <nav>
             <NavLink to="/" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}}>Inicio</NavLink>
             <NavLink to="/documentacion/inicio" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}}>Documentación</NavLink>
-            {/*<NavLink to="/app" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}} href="#">App móvil</NavLink>*/}
+            <NavLink to="/app" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}} href="#">App móvil</NavLink>
             {/*<NavLink to="/foro" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}} href="#">Foro</NavLink>*/}
             <NavLink to="/contacto" style={{borderBottomColor: this.props.terciario, color: this.props.secundario}} href="#">Contacto</NavLink>
             <a 
